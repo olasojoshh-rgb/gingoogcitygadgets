@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">Gingoog Gadgets logo</title>
+  <desc id="desc">Sample blue Gingoog Gadgets logo</desc>
+  <circle cx="80" cy="80" r="74" fill="#2563eb" stroke="#93c5fd" stroke-width="6"/>
+  <path d="M52 49h56v18H71v14h33v17H71v13h37v18H52z" fill="#ffffff"/>
+  <path d="M45 105h70v16H45z" fill="#bfdbfe"/>
+</svg>

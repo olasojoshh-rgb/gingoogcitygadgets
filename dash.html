@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gingoog Gadgets Dashboard</title>
+    <link rel="stylesheet" href="dash.css">
+</head>
+
+<body onload="loadDashboard()">
+
+    <button id="menuToggle" class="menu-toggle" onclick="toggleSidebar()" aria-label="Open navigation menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div id="menuBackdrop" class="menu-backdrop" onclick="toggleSidebar()"></div>
+
+    <div class="sidebar">
+        <img class="sidebar-logo" src="/logo pic/ChatGPT Image Sep 10, 2026, 11_04_23 PM.png" alt="Gingoog Gadgets logo">
+        <h2>Gingoog Gadgets</h2>
+
+        <ul>
+            <li class="active" onclick="navigateTo('dashboard')">Dashboard</li>
+            <li onclick="navigateTo('products')">Products</li>
+            <li onclick="navigateTo('stock-in')">Stock In</li>
+            <li onclick="navigateTo('stock-out')">Stock Out</li>
+            <li onclick="navigateTo('low-stock')">Low Stock</li>
+            <li onclick="navigateTo('reports')">Reports</li>
+            <li onclick="navigateTo('activity-logs')">Activity Logs</li>
+            <li onclick="logout()">Logout</li>
+        </ul>
+    </div>
+
+    <div class="main">
+
+        <h1 id="pageTitle">Inventory Dashboard</h1>
+
+        <div id="dashboardPage" class="page-section active">
+            <div id="dashboardSection" class="cards">
+
+                <div class="card">
+                    <h3>Total Products</h3>
+                    <p id="totalProducts">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Stock In</h3>
+                    <p id="totalStockIn">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Stock Out</h3>
+                    <p id="totalStockOut">0</p>
+                </div>
+
+                <div class="card">
+                    <h3>Low Stock</h3>
+                    <p id="lowStock">0</p>
+                </div>
+            </div>
+
+            <div class="dashboard-table-grid">
+                <div class="table-section">
+                    <h2>Inventory Overview</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboardProductTable"></tbody>
+                    </table>
+                </div>
+
+                <div class="table-section">
+                    <h2>Low Stock Products</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowStockTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="lowStockPage" class="page-section">
+            <div class="table-section">
+                <h2>Low Stock Products</h2>
+                <p class="section-note">Products with quantity 6 or below need restocking.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lowStockPageTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="reportsPage" class="page-section">
+            <div class="report-actions">
+                <button onclick="printReport()">Print Report</button>
+            </div>
+
+            <div class="report-summary">
+                <div class="card">
+                    <h3>Total Products</h3>
+                    <p id="reportTotalProducts">0</p>
+                </div>
+                <div class="card">
+                    <h3>Total Items</h3>
+                    <p id="reportTotalItems">0</p>
+                </div>
+                <div class="card">
+                    <h3>Low Stock</h3>
+                    <p id="reportLowStock">0</p>
+                </div>
+            </div>
+
+            <div class="table-section">
+                <h2>Inventory Report</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportInventoryTable"></tbody>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <h2>Stock Movement Report</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportMovementTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="activityLogsPage" class="page-section">
+            <div class="log-actions">
+                <button onclick="clearActivityLogs()">Clear Logs</button>
+            </div>
+
+            <div class="table-section">
+                <h2>Activity Logs</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Product</th>
+                            <th>Details</th>
+                            <th>Date/Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityLogTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="productsPage" class="page-section">
+            <div id="productsSection" class="product-form">
+
+                <h2 id="formTitle">Add Product</h2>
+
+                <input type="text" id="productName" placeholder="Product Name">
+
+                <label for="category">Category</label>
+                <select id="category">
+                    <option value="">Select a category</option>
+                    <option value="Mobile Phones">Mobile Phones</option>
+                    <option value="Laptops">Laptops</option>
+                    <option value="Tablets">Tablets</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Chargers">Chargers</option>
+                    <option value="Audio">Audio</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <input type="number" id="quantity" placeholder="Quantity">
+
+                <button id="productSubmitButton" onclick="saveProduct()">
+                    Add Product
+                </button>
+
+                <button id="cancelEditButton" class="cancel-button" onclick="cancelEdit()" hidden>
+                    Cancel
+                </button>
+
+            </div>
+
+            <div class="table-section">
+
+                <h2>Product List</h2>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="productTable">
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+        <div id="stockInPage" class="page-section">
+            <div class="product-form stock-form">
+                <h2>Stock In</h2>
+                <label for="stockInProduct">Product</label>
+                <select id="stockInProduct"></select>
+                <input type="number" id="stockInQuantity" min="1" placeholder="Quantity to add">
+                <button onclick="recordStockIn()">Record Stock In</button>
+            </div>
+
+            <div class="table-section">
+                <h2>Stock In History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockInTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="stockOutPage" class="page-section">
+            <div class="product-form stock-form">
+                <h2>Stock Out</h2>
+                <label for="stockOutProduct">Product</label>
+                <select id="stockOutProduct"></select>
+                <input type="number" id="stockOutQuantity" min="1" placeholder="Quantity to remove">
+                <button onclick="recordStockOut()">Record Stock Out</button>
+            </div>
+
+            <div class="table-section">
+                <h2>Stock Out History</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockOutTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="dash.js"></script>
+
+</body>
+
+</html>
